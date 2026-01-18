@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Leave Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <!-- Login Section -->
+    <div id="login-section" class="screen active">
+        <div class="glass-card login-card">
+            <h1>Welcome Back</h1>
+            <p>Please login to your account</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" required placeholder="name@company.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p class="toggle-text">Don't have an account? <a href="#" id="show-register">Register</a></p>
+            <div id="login-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Register Section -->
+    <div id="register-section" class="screen">
+        <div class="glass-card login-card">
+            <h1>Create Account</h1>
+            <p>Join the Leave Management System</p>
+            <form id="register-form">
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" id="reg-fname" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" id="reg-lname" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" required placeholder="name@company.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••">
+                </div>
+                <div class="input-group">
+                    <label>Role</label>
+                    <select id="reg-role">
+                        <option value="Employee">Employee</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+            <p class="toggle-text">Already have an account? <a href="#" id="show-login">Login</a></p>
+            <div id="reg-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-section" class="screen">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>LeaveLog</h2>
+            </div>
+            <ul class="nav-links">
+                <li data-view="dashboard-home" id="nav-overview" class="active">Overview</li>
+                <li data-view="apply-leave" id="nav-apply">Apply Leave</li>
+                <li data-view="leave-history" id="nav-history">My History</li>
+                <li data-view="admin-approvals" id="nav-approvals" class="hidden">Pending Approvals</li>
+                <li data-view="approval-history" id="nav-approval-history" class="hidden">Approval History</li>
+                <li id="logout-btn">Logout</li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <header class="top-bar">
+                <h1 id="view-title">Overview</h1>
+                <div class="user-pill">
+                    <span id="user-name">Employee</span>
+                    <span id="user-role" class="badge">Role</span>
+                </div>
+            </header>
+
+            <!-- Dashboard Home -->
+            <section id="dashboard-home" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Remaining Days</h3>
+                        <p class="stat-value">12</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Requests</h3>
+                        <p class="stat-value" id="pending-count">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Apply Leave -->
+            <section id="apply-leave" class="view">
+                <div class="glass-card">
+                    <h2>Submit Leave Application</h2>
+                    <form id="leave-form">
+                        <div class="input-group">
+                            <label>Leave Type</label>
+                            <select id="leave-type" required>
+                                <option value="1">Sick Leave</option>
+                                <option value="2">Vacation Leave</option>
+                                <option value="3">Unpaid Leave</option>
+                            </select>
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Start Date</label>
+                                <input type="date" id="start-date" required>
+                            </div>
+                            <div class="input-group">
+                                <label>End Date</label>
+                                <input type="date" id="end-date" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Reason</label>
+                            <textarea id="leave-reason" rows="4" placeholder="Brief explanation..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Submit Application</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Leave History -->
+            <section id="leave-history" class="view">
+                <div class="table-container">
+                    <table id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Dates</th>
+                                <th>Days</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Admin/Manager Approvals -->
+            <section id="admin-approvals" class="view">
+                <div class="table-container">
+                    <table id="approvals-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Type</th>
+                                <th>Dates</th>
+                                <th>Reason</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvals-body">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Approval History (Admin) -->
+            <section id="approval-history" class="view">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Type</th>
+                                <th>Dates</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approval-history-body">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
