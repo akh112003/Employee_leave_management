@@ -4,10 +4,16 @@
   "description": "A full-stack employee leave management system with JWT authentication and role-based access control",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "nodemon server.js",
+    "dev": "nodemon server.js"
   },
-  "keywords": ["leave-management", "nodejs", "express", "jwt", "rbac"],
+  "keywords": [
+    "leave-management",
+    "nodejs",
+    "express",
+    "jwt",
+    "rbac"
+  ],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
@@ -19,5 +25,8 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.16.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }

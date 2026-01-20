@@ -1,7 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const DB_FILE = path.join(__dirname, 'mock_db.json');
+const DB_FILE = process.env.VERCEL
+    ? path.join('/tmp', 'mock_db.json')
+    : path.join(__dirname, 'mock_db.json');
+
+if (process.env.VERCEL) {
+    console.warn('WARNING: Running on Vercel with ephemeral filesystem. Data in mock_db.json will not persist between restarts.');
+}
+
 
 function readDb() {
     if (!fs.existsSync(DB_FILE)) {

@@ -48,7 +48,24 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV}`);
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`Environment: ${process.env.NODE_ENV}`);
+    });
+}
+
+module.exports = app;
+
+// --- Global Crash Handlers ---
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.error(err.name, err.message);
+    process.exit(1); // Nodemon will restart
+});
+
+process.on('unhandledRejection', (err) => {
+    console.error('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.error(err.name, err.message);
+    process.exit(1); // Nodemon will restart
 });
