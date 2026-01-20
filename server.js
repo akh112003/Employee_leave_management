@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path'); // Import path module
 const cors = require('cors'); // Good practice for modern APIs
 
 // Config
@@ -20,7 +21,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors()); // Allow cross-origin requests
-app.use(express.static('public')); // Serve frontend files
+app.use(express.static(path.join(__dirname, 'public'))); // Serve frontend files with absolute path
 
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
@@ -29,7 +30,7 @@ app.use('/api/manager', managerRoutes);
 app.use('/api/leaves', leaveRoutes);
 
 // --- Basic Home Service Info ---
-app.get('/', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.json({
         service: 'Employee Leave Management API',
         version: '1.0.0',
